@@ -13,10 +13,17 @@ const SearchBar = () => {
   // this useEffect will run once
   // similar to componentDidMount()
   useEffect(() => {
-    fetch("https://pokeapi.co/api/v2/pokemon?limit=1118")
+    fetch("https://pokeapi.co/api/v2/pokemon?limit=20")
       .then((res) => res.json())
       .then(
         (result) => {
+          result.results.map((pokemon) => {
+            fetch(pokemon.url)
+              .then((res) => res.json())
+              .then((result) => {
+                console.log(result);
+              });
+          });
           setIsLoaded(true);
           setItems(result.results);
         },
@@ -36,6 +43,7 @@ const SearchBar = () => {
       });
     });
   };
+  console.log(items);
 
   if (error) {
     return <div>Error: {error.message}</div>;
