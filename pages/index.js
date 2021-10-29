@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 function Pokemon({ pokeDetails, pokemonNames }) {
   const [q, setQ] = useState("");
@@ -78,25 +79,31 @@ function Pokemon({ pokeDetails, pokemonNames }) {
 
           return (
             <div key={pokemon.name} className="card">
-              <div className="pokemon-photo-container">
-                <Image
-                  className="pokemon-photo"
-                  src={spriteUrl}
-                  alt="Pokemon image"
-                  width={100}
-                  height={100}
-                  // layout="fill"
-                />
-              </div>
-              <div className="pokemon-info">
-                <div className="pokemon-name">{pokemon.name.toUpperCase()}</div>
-                <div className="pokemon-name">
-                  Type:{" "}
-                  {pokeDetails[pokemon.name].types.map(
-                    (list) => list.type.name.toUpperCase() + " "
-                  )}
-                </div>
-              </div>
+              <Link href={`/pokemon/${pokemon.name}`} passHref>
+                <a>
+                  <div className="pokemon-photo-container">
+                    <Image
+                      className="pokemon-photo"
+                      src={spriteUrl}
+                      alt="Pokemon image"
+                      width={100}
+                      height={100}
+                      // layout="fill"
+                    />
+                  </div>
+                  <div className="pokemon-info">
+                    <div className="pokemon-name">
+                      {pokemon.name.toUpperCase()}
+                    </div>
+                    <div className="pokemon-name">
+                      Type:{" "}
+                      {pokeDetails[pokemon.name].types.map(
+                        (list) => list.type.name.toUpperCase() + " "
+                      )}
+                    </div>
+                  </div>
+                </a>
+              </Link>
             </div>
           );
         })}
