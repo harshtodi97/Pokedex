@@ -6,7 +6,7 @@
 
 .card {
   margin: 2.5% 10%;
-    width: 80%;
+  width: 80%;
   height: 20vh;
   min-height: 200px;
   border-radius: 15px;
@@ -72,3 +72,48 @@
   padding: 0.5em;
 }
 
+.grid-container {
+  display: grid;
+  grid-gap: 2%;
+  /* background: red; */
+  grid-template-columns: 32% 32% 32%;
+  grid-template-rows: 32% 32% 32%;
+  padding: 20px;
+  height: 95vh;
+}
+
+.grid-container > div {
+  padding: 10px;
+  border-radius: 15px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
+.item1 {
+  grid-column-start: 1;
+  grid-column-end: 3;
+  display: flex;
+  flex-direction: row;
+
+}
+
+.pokemon-image {
+  position: relative;
+  width: 50%;
+  display: flex;
+  justify-content: center;
+}
+
+.pokemon-details {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+}
+
+.item3 {
+  grid-row-start: 2;
+  grid-row-end: 4;
+  overflow-x: hidden;
+}
