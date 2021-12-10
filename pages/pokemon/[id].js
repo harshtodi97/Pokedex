@@ -86,21 +86,21 @@ const Pokemon = ({ data }) => {
 };
 
 export async function getStaticPaths() {
-  const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
+  const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=10");
   const data = await res.json();
   const pokemonData = data.results;
   const paths = pokemonData.map((pokemon) => ({
     params: { id: pokemon.name },
   }));
 
-  return { paths, fallback: false };
+  return { paths, fallback: "blocking" };
 }
 
 export async function getStaticProps({ params }) {
   const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${params.id}`);
   const data = await res.json();
 
-  return { props: { data } };
+  return { props: { data }, revalidate: 30 };
 }
 
 export default Pokemon;
