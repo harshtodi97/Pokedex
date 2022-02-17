@@ -1,11 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Button, ButtonGroup, Box } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 function Pokemon({ pokeDetails, pokemonNames }) {
+  const router = useRouter();
   const [q, setQ] = useState("");
   const [searchParam] = useState(["name"]);
   const [filterParam, setFilterParam] = useState("all");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const search = (items) => {
     return items.filter((item) => {
@@ -29,92 +37,100 @@ function Pokemon({ pokeDetails, pokemonNames }) {
     });
   };
 
-  return (
-    <div>
-      <div className="search-bar">
-        <label htmlFor="search-form">
-          <span className="sr-only">Search Pokemon here </span>
-          <input
-            type="search"
-            name="search-form"
-            id="search-form"
-            // className="search-input"
-            placeholder="Search Pokemon..."
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-          />
-        </label>
-      </div>
-      <div className="type-filter">
-        <select
-          onChange={(e) => {
-            setFilterParam(e.target.value.toLowerCase());
-          }}
-          className="custom-select"
-          aria-label="Filter Pokemon By Type"
-        >
-          <option value="All">Filter By Type</option>
-          <option value="Electric">Electric</option>
-          <option value="Fire">Fire</option>
-          <option value="Flying">Flying</option>
-          <option value="Ghost">Ghost</option>
-          <option value="Grass">Grass</option>
-          <option value="Ground">Ground</option>
-          <option value="Ice">Ice</option>
-          <option value="Poison">Poison</option>
-          <option value="Rock">Rock</option>
-          <option value="Steel">Steel</option>
-          <option value="Normal">Normal</option>
-          <option value="Fairy">Fairy</option>
-          <option value="Fighting">Fighting</option>
-          <option value="Dragon">Dragon</option>
-          <option value="Bug">Bug</option>
-          <option value="Psychic">Psychic</option>
-          <option value="Water">Water</option>
-        </select>
-      </div>
-      <div className="container">
-        {search(pokemonNames).map((pokemon) => {
-          let spriteUrl = Object.values(pokeDetails[pokemon.name].sprites)[4];
+  if (mounted) {
+    return (
+      <div>
+        <div className="search-bar">
+          <label htmlFor="search-form">
+            <span className="sr-only">Search Pokemon here </span>
+            <input
+              type="search"
+              name="search-form"
+              id="search-form"
+              // className="search-input"
+              placeholder="Search Pokemon..."
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+            />
+          </label>
+        </div>
+        <div className="type-filter">
+          <select
+            onChange={(e) => {
+              setFilterParam(e.target.value.toLowerCase());
+            }}
+            className="custom-select"
+            aria-label="Filter Pokemon By Type"
+          >
+            <option value="All">Filter By Type</option>
+            <option value="Electric">Electric</option>
+            <option value="Fire">Fire</option>
+            <option value="Flying">Flying</option>
+            <option value="Ghost">Ghost</option>
+            <option value="Grass">Grass</option>
+            <option value="Ground">Ground</option>
+            <option value="Ice">Ice</option>
+            <option value="Poison">Poison</option>
+            <option value="Rock">Rock</option>
+            <option value="Steel">Steel</option>
+            <option value="Normal">Normal</option>
+            <option value="Fairy">Fairy</option>
+            <option value="Fighting">Fighting</option>
+            <option value="Dragon">Dragon</option>
+            <option value="Bug">Bug</option>
+            <option value="Psychic">Psychic</option>
+            <option value="Water">Water</option>
+          </select>
+        </div>
+        <div className="container">
+          {search(pokemonNames).map((pokemon) => {
+            let spriteUrl = Object.values(pokeDetails[pokemon.name].sprites)[4];
 
-          return (
-            <div key={pokemon.name} className="card">
-              <Link href={`/pokemon/${pokemon.name}`} passHref>
-                <a>
-                  <div className="pokemon-photo-container">
-                    <Image
-                      className="pokemon-photo"
-                      src={spriteUrl}
-                      alt="Pokemon image"
-                      width={100}
-                      height={100}
-                      // layout="fill"
-                    />
+            return (
+              <Box
+                as="button"
+                key={pokemon.name}
+                className="card"
+                onClick={() => router.push(`/pokemon/${pokemon.name}`)}
+              >
+                {/* <Link href={`/pokemon/${pokemon.name}`} passHref>
+                  <a> */}
+                <div className="pokemon-photo-container">
+                  <Image
+                    className="pokemon-photo"
+                    src={spriteUrl}
+                    alt="Pokemon image"
+                    width={100}
+                    height={100}
+                    // layout="fill"
+                  />
+                </div>
+                <div className="pokemon-info">
+                  <div className="pokemon-name">
+                    {pokemon.name.toUpperCase()}
                   </div>
-                  <div className="pokemon-info">
-                    <div className="pokemon-name">
-                      {pokemon.name.toUpperCase()}
-                    </div>
-                    <div className="pokemon-name">
-                      Type:{" "}
-                      {pokeDetails[pokemon.name].types.map(
-                        (list) => list.type.name.toUpperCase() + " "
-                      )}
-                    </div>
+                  <div className="pokemon-name">
+                    Type:{" "}
+                    {pokeDetails[pokemon.name].types.map(
+                      (list) => list.type.name.toUpperCase() + " "
+                    )}
                   </div>
-                </a>
-              </Link>
-            </div>
-          );
-        })}
+                </div>
+                {/* </a>
+                </Link> */}
+              </Box>
+            );
+          })}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  return <div>loading...</div>;
 }
 
-
 export async function getStaticProps() {
-  const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=151");
+  const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=20");
 
   const pokemon = await res.json();
   let pokemonNames = pokemon.results;
